@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار الكفايات اللغوية (أول ثانوي - نموذج و) - ثانوية الأمير عبدالمجيد</title>
+    <title>نموذج إجابة اختبار الكفايات اللغوية (أول ثانوي - نموذج و) - ثانوية الأمير عبدالمجيد</title>
     <!-- مكتبة Firebase للاتصال بقاعدة بيانات لوحتك -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -38,7 +38,7 @@
         .info-table.p2 { background: #d1fae5; border-color: #059669; }
         .info-table td { padding: 6px 10px; border: 1px solid #fde68a; }
         .info-table.p2 td { border-color: #a7f3d0; }
-        .info-table td span.line { border-bottom: 1px dotted #b45309; display: inline-block; width: 70%; }
+        .info-table td span.line { border-bottom: 1px dotted #b45309; display: inline-block; width: 70%; font-weight: bold; color: #065f46; }
         .info-table.p2 td span.line { border-bottom-color: #047857; }
         .section-title {
             background: #fef3c7; color: #9a3412; font-weight: bold;
@@ -56,15 +56,29 @@
         .q-title { font-weight: bold; color: #000000; margin-bottom: 4px; font-size: 9.5pt; line-height: 1.25; }
         .options { display: flex; flex-direction: column; gap: 3px; font-size: 9pt; color: #000000; }
         .option-item { display: flex; align-items: center; gap: 6px; }
+        
+        /* الخيارات العادية والمظللة */
         .circle-choice {
             width: 12px; height: 12px; border: 1.5px solid #000000;
             border-radius: 50%; display: inline-block; flex-shrink: 0; background-color: #fff;
         }
+        .circle-choice.filled {
+            background-color: #000000 !important;
+        }
+        .option-item.correct {
+            font-weight: bold;
+            color: #065f46;
+        }
+
         .bubble-card { background: #ffffff; border: 2px solid #059669; border-radius: 6px; padding: 6px 10px; margin-top: 4px; }
         .bubble-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; text-align: center; }
         .bubble-table th { background: #d1fae5; color: #065f46; border: 1.5px solid #059669; padding: 3px 2px; font-weight: bold; }
         .bubble-table td { border: 1px solid #6ee7b7; padding: 3px 2px; font-weight: bold; }
+        
+        /* الدوائر المظللة في الجدول */
         .bubble { width: 13px; height: 13px; border: 1.5px solid #000000; border-radius: 50%; display: inline-block; background-color: #fff; }
+        .bubble.filled { background-color: #000000 !important; }
+
         .footer-bar { text-align: center; font-size: 8.5pt; color: #065f46; padding: 4px 0 0 0; border-top: 1px solid #e5e7eb; margin-top: 4px; }
         
         .teacher-dashboard-panel {
@@ -88,12 +102,12 @@
 <body>
 
     <div class="print-btn-container">
-        <button class="print-btn" onclick="window.print()">🖨️ طباعة ورقة الاختبار</button>
+        <button class="print-btn" onclick="window.print()">🖨️ طباعة نموذج الإجابة</button>
     </div>
 
     <!-- لوحة أدوات المعلم والتصحيح -->
     <div class="teacher-dashboard-panel">
-        <h3 style="color: #0369a1; margin-top:0; text-align:center;">🛠️ لوحة التصحيح والربط السحابي (نموذج و)</h3>
+        <h3 style="color: #0369a1; margin-top:0; text-align:center;">🛠️ لوحة النموذج المظلل (نموذج و)</h3>
         <div style="margin-bottom: 10px;">
             <label style="font-weight:bold; font-size:0.9rem;">اختر اسم الطالب:</label>
             <input type="text" id="studentSearchInput" placeholder="اكتب اسم الطالب للبحث..." style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" oninput="filterStudents()" onclick="showDropdown()">
@@ -106,7 +120,7 @@
             <button type="button" onclick="fetchCloudModelsList()" style="padding:8px 12px; background:#0284c7; color:white; border:none; border-radius:6px; cursor:pointer;">تحديث</button>
         </div>
         <div style="text-align:center; margin-top:10px;">
-            <span id="liveScoreDisplay" style="font-weight:bold; color:#047857; font-size:1.1rem;">الدرجة الفورية: 0 من 20</span>
+            <span id="liveScoreDisplay" style="font-weight:bold; color:#047857; font-size:1.1rem;">الدرجة المستحقة: 20 من 20</span>
             <button type="button" onclick="processAndSendToDashboard()" style="display:block; width:100%; margin-top:8px; padding:10px; background:#10b981; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">اعتماد النتيجة وإرسالها لوحة التحكم</button>
         </div>
     </div>
@@ -116,15 +130,15 @@
         <div>
             <div class="header-banner">
                 <h1>المملكة العربية السعودية | وزارة التعليم | ثانوية الأمير عبدالمجيد 🏫</h1>
-                <p>المادة: الكفايات اللغوية (أول ثانوي) | <strong>ورقة أسئلة الطالب (نموذج و)</strong></p>
+                <p>المادة: الكفايات اللغوية (أول ثانوي) | <strong>نموذج الإجابة المعتمد (نموذج و)</strong></p>
             </div>
             <table class="info-table">
                 <tr>
-                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">&nbsp;</span></td>
-                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">&nbsp;</span></td>
+                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">نموذج الإجابة الصحيحة</span></td>
+                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">أول ثانوي</span></td>
                 </tr>
             </table>
-            <div class="section-title">الصفحة الأولى: الأسئلة من 1 إلى 12 (اختر الإجابة الصحيحة)</div>
+            <div class="section-title">الصفحة الأولى: الأسئلة من 1 إلى 12 (الإجابات المظللة)</div>
         </div>
 
         <div class="content-area">
@@ -134,7 +148,7 @@
                         <div class="q-title">1. الجملة المشتملة على فعل ناسخ هي:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) إنَّ المعلمَ مخلصٌ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) كان الجوُّ ماطراً</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) كان الجوُّ ماطراً</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) لعلَّ الطالبَ قادمٌ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) ليتَ الشَبابَ يعودُ</div>
                         </div>
@@ -143,7 +157,7 @@
                         <div class="q-title">2. الخبر في جملة "الشمسُ ساطعةٌ" هو:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) الشمسُ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) ساطعةٌ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) ساطعةٌ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) ضمير مستتر</div>
                             <div class="option-item"><span class="circle-choice"></span>د) محذوف</div>
                         </div>
@@ -152,7 +166,7 @@
                         <div class="q-title">3. الفعل المضارع "تقرأَ" في جملة "لن تقرأَ القراءةَ الخاطئةَ" هو فعل:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) مرفوع وعلامة رفعه الضمة</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) منصوب وعلامة نصبه الفتحة</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) منصوب وعلامة نصبه الفتحة</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) مجزوم وعلامة جزمه السكون</div>
                             <div class="option-item"><span class="circle-choice"></span>د) مبني على الفتح</div>
                         </div>
@@ -161,7 +175,7 @@
                         <div class="q-title">4. الجملة المشتملة على فعل مضارع مجزوم بـ (لم) هي:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) لن يفرّطَ المؤمنُ في أمانته</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) لم ينسَ الطالبُ واجبه</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) لم ينسَ الطالبُ واجبه</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) يذاكرُ التلميذُ دروسه</div>
                             <div class="option-item"><span class="circle-choice"></span>د) كي ينجحَ التلميذُ يجب أن يدرس</div>
                         </div>
@@ -170,7 +184,7 @@
                         <div class="q-title">5. الفعل المضارع "تكتبون" من الأفعال الخمسة، وعلامة رفعه هي:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) الضمة الظاهرة</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) ثبوت النون</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) ثبوت النون</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) حذف النون</div>
                             <div class="option-item"><span class="circle-choice"></span>د) الضمة المقدرة</div>
                         </div>
@@ -180,7 +194,7 @@
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) كتبَ</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) العقدَ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ج) المحامي</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ج) المحامي</div>
                             <div class="option-item"><span class="circle-choice"></span>د) ضمير مستتر</div>
                         </div>
                     </div>
@@ -191,7 +205,7 @@
                         <div class="q-title">7. عند حذف الفعل الناسخ من جملة "أصبحَ المهندسُ بارعاً" ترجع الجملة إلى:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) المهندسُ بارعاً</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) المهندسُ بارعٌ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) المهندسُ بارعٌ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) المهندساً بارعٌ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) المهندسِ بارعٍ</div>
                         </div>
@@ -199,7 +213,7 @@
                     <div class="q-box">
                         <div class="q-title">8. الفعل المضارع "يسعى" عند سبقه بالأداة (لن) يصبح:</div>
                         <div class="options">
-                            <div class="option-item"><span class="circle-choice"></span>أ) يسعى (الفتحة المقدرة للتعذر)</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>أ) يسعى (الفتحة المقدرة للتعذر)</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) لن يسعَ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) لن يسعىُ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) لن يسعون</div>
@@ -210,14 +224,14 @@
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) حذف حرف العلة</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) حذف النون</div>
-                            <div class="option-item"><span class="circle-choice"></span>ج) السكون</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ج) السكون</div>
                             <div class="option-item"><span class="circle-choice"></span>د) الفتحة</div>
                         </div>
                     </div>
                     <div class="q-box">
                         <div class="q-title">10. عند بناء الجملة "فَتَحَ الخادمُ البابَ" للمجهول تصبح:</div>
                         <div class="options">
-                            <div class="option-item"><span class="circle-choice"></span>أ) فُتِحَ البابُ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>أ) فُتِحَ البابُ</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) فَتَحَ البابَ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) يُفْتَحُ الخادمُ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) فُتِحَ البابَ</div>
@@ -227,7 +241,7 @@
                         <div class="q-title">11. الفعل المضارع "يلعبوا" في جملة "كي يلعبوا بالكرة" منصوب وعلامة نصبه:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) الفتحة الظاهرة</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) حذف النون</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) حذف النون</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) ثبوت النون</div>
                             <div class="option-item"><span class="circle-choice"></span>د) السكون</div>
                         </div>
@@ -236,7 +250,7 @@
                         <div class="q-title">12. إعراب كلمة "مؤمنًا" في جملة "صارَ الرجلُ مؤمنًا":</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) اسم صار مرفوع</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) خبر صار منصوب بالفتحة</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) خبر صار منصوب بالفتحة</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) فاعل مرفوع</div>
                             <div class="option-item"><span class="circle-choice"></span>د) مفعول به منصوب</div>
                         </div>
@@ -244,17 +258,17 @@
                 </div>
             </div>
         </div>
-        <div class="footer-bar">صفحة 1 من 2 - نموذج (و) - ثانوية الأمير عبدالمجيد</div>
+        <div class="footer-bar">صفحة 1 من 2 - نموذج الإجابة (و) - ثانوية الأمير عبدالمجيد</div>
     </div>
 
     <!-- الصفحة الثانية - نموذج (و) -->
     <div class="page">
         <div>
-            <div class="section-title p2" style="margin-top: 0;">ثانوية الأمير عبدالمجيد 🏫 | الصفحة الثانية: الأسئلة (13 إلى 20) وجدول التظليل</div>
+            <div class="section-title p2" style="margin-top: 0;">ثانوية الأمير عبدالمجيد 🏫 | الصفحة الثانية: الأسئلة (13 إلى 20) وجدول التظليل الإجابات النموذجية</div>
             <table class="info-table p2">
                 <tr>
-                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">&nbsp;</span></td>
-                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">&nbsp;</span></td>
+                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">نموذج الإجابة الصحيحة</span></td>
+                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">أول ثانوي</span></td>
                 </tr>
             </table>
         </div>
@@ -266,7 +280,7 @@
                         <div class="q-title">13. الضبط الصحيح لكلمة (العلم) في جملة "لعل العلم نافع":</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) العلمُ (بالضم)</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) العلمَ (بالفتح)</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) العلمَ (بالفتح)</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) العلمِ (بالكسر)</div>
                             <div class="option-item"><span class="circle-choice"></span>د) العلمٌ (بالتنوين)</div>
                         </div>
@@ -275,7 +289,7 @@
                         <div class="q-title">14. الجملة التي تحتوي على نائب فاعل هي:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) حفظَ الطالبُ القرآنَ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) كُوفِئَ المبدعُ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) كُوفِئَ المبدعُ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) يشرحُ المعلمُ الدرسَ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) نزلَ المطرُ غزيرًا</div>
                         </div>
@@ -284,7 +298,7 @@
                         <div class="q-title">15. الفعل المضارع المرفوع بالضمة المقدرة فيما يلي هو:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) يكتبُ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) يدعو</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) يدعو</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) لن يكتبَ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) لم يكتبْ</div>
                         </div>
@@ -293,7 +307,7 @@
                         <div class="q-title">16. عند إدخال الأداة (لم) على الفعل "يمشي" تكتب الجملة:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) لم يمشي</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) لم يمشِ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) لم يمشِ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) لم يمشَ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) لم يمشو</div>
                         </div>
@@ -305,7 +319,7 @@
                         <div class="q-title">17. عند بناء الفعل المضارع "يَشْرَحُ" للمجهول يُضبط بـ:</div>
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) شُرِحَ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ب) يُشْرَحُ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ب) يُشْرَحُ</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) أشْرَحُ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) شَارَحَ</div>
                         </div>
@@ -315,7 +329,7 @@
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) لم</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) إنَّ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ج) كي</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ج) كي</div>
                             <div class="option-item"><span class="circle-choice"></span>د) كان</div>
                         </div>
                     </div>
@@ -324,14 +338,14 @@
                         <div class="options">
                             <div class="option-item"><span class="circle-choice"></span>أ) رُفِعَ العلمُ</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) قُرِئَتِ القصّةُ</div>
-                            <div class="option-item"><span class="circle-choice"></span>ج) زرعَ الفلاحُ الأرضَ</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>ج) زرعَ الفلاحُ الأرضَ</div>
                             <div class="option-item"><span class="circle-choice"></span>د) أُكِلَ الطعامُ</div>
                         </div>
                     </div>
                     <div class="q-box">
                         <div class="q-title">20. علامة نصب الأفعال الخمسة بـ (لن) هي:</div>
                         <div class="options">
-                            <div class="option-item"><span class="circle-choice"></span>أ) حذف النون</div>
+                            <div class="option-item correct"><span class="circle-choice filled"></span>أ) حذف النون</div>
                             <div class="option-item"><span class="circle-choice"></span>ب) ثبوت النون</div>
                             <div class="option-item"><span class="circle-choice"></span>ج) الفتحة</div>
                             <div class="option-item"><span class="circle-choice"></span>د) السكون</div>
@@ -340,28 +354,64 @@
                 </div>
             </div>
 
-            <!-- جدول التظليل -->
+            <!-- جدول التظليل المكتمل بجميع الإجابات الصحيحة -->
             <div class="bubble-card">
                 <div style="text-align: center; color: #065f46; font-weight: bold; font-size: 10pt; margin-bottom: 2px;">
-                    <h3>جدول تظليل إجابات الطالب :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(نموذج و) أ / عبدالعزيز الفيفي</h3>
+                    <h3>جدول الإجابات النموذجية المظللة :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(نموذج و) أ / عبدالعزيز الفيفي</h3>
                 </div>
                 <table class="bubble-table">
                     <tr>
                         <th>السؤال</th><th>أ</th><th>ب</th><th>ج</th><th>د</th>
                         <th>السؤال</th><th>أ</th><th>ب</th><th>ج</th><th>د</th>
                     </tr>
-                    <script>
-                        for(let i=1; i<=10; i++) {
-                            document.write(`<tr>
-                                <td>${i}</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
-                                <td>${i+10}</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
-                            </tr>`);
-                        }
-                    </script>
+                    <!-- مفاتيح نموذج (و): 
+                         1: ب, 2: ب, 3: ب, 4: ب, 5: ب, 6: ج, 7: ب, 8: أ, 9: ج, 10: أ
+                         11: ب, 12: ب, 13: ب, 14: ب, 15: ب, 16: ب, 17: ب, 18: ج, 19: ج, 20: أ
+                    -->
+                    <tr>
+                        <td>1</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>11</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>12</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>13</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>14</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>15</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td>
+                        <td>16</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>17</td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>8</td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>18</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>9</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td>
+                        <td>19</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td>
+                    </tr>
+                    <tr>
+                        <td>10</td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                        <td>20</td><td><span class="bubble filled"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                    </tr>
                 </table>
             </div>
         </div>
-        <div class="footer-bar">صفحة 2 من 2 - نموذج (و) - ثانوية الأمير عبدالمجيد - إعداد: أ/ عبدالعزيز الفيفي 🎓</div>
+        <div class="footer-bar">صفحة 2 من 2 - نموذج الإجابة (و) - ثانوية الأمير عبدالمجيد - إعداد: أ/ عبدالعزيز الفيفي 🎓</div>
     </div>
 
 <script>
@@ -482,7 +532,7 @@
             name: studentName,
             score: score,
             total: 20,
-            model_id: "نموذج و",
+            model_id: "نموذج و (نموذج إجابة)",
             time: firebase.firestore.FieldValue.serverTimestamp()
         };
         try {
