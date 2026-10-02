@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج التدريب المتقدم (نموذج و) - الكفايات اللغوية - ثانوية الأمير عبدالمجيد</title>
+    <!-- مكتبة Firebase للاتصال بقاعدة بيانات لوحتك -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 8mm 10mm 8mm 10mm; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+            height: 100%; margin: 0; padding: 0;
+            background-color: #f3f4f6;
+            font-family: 'Cairo', 'Tahoma', Arial, sans-serif;
+            color: #000000;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .page {
+            width: 210mm; height: 297mm; max-width: 100%;
+            margin: 0 auto; background: #ffffff;
+            padding: 10mm; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; justify-content: space-between;
+            page-break-after: always; page-break-inside: avoid;
+        }
+        .header-banner {
+            background: linear-gradient(135deg, #7c2d12, #9a3412);
+            color: #ffffff; padding: 10px 14px; border-radius: 6px; text-align: center;
+        }
+        .header-banner h1 { margin: 0 0 4px 0; font-size: 13pt; font-weight: bold; }
+        .header-banner p { margin: 0; font-size: 9.5pt; color: #ffedd5; }
+        .info-table {
+            width: 100%; border-collapse: collapse; background: #ffedd5;
+            border: 1px solid #ea580c; border-radius: 6px; margin-top: 6px; font-size: 10pt;
+        }
+        .info-table.p2 { background: #ffedd5; border-color: #ea580c; }
+        .info-table td { padding: 6px 10px; border: 1px solid #fed7aa; }
+        .info-table.p2 td { border-color: #fed7aa; }
+        .info-table td span.line { border-bottom: 1px dotted #c2410c; display: inline-block; width: 70%; }
+        .section-title {
+            background: #ffedd5; color: #7c2d12; font-weight: bold;
+            padding: 6px 10px; border-radius: 5px; margin-top: 6px;
+            font-size: 10.5pt; text-align: center; border: 1px solid #ea580c;
+        }
+        .section-title.p2 { background: #ffedd5; color: #7c2d12; border-color: #ea580c; }
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 6px; }
+        .two-columns { display: flex; gap: 10px; height: 100%; }
+        .column { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .q-box {
+            background: #ffffff; border: 1.5px solid #d1d5db; border-radius: 6px;
+            padding: 6px 8px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .q-title { font-weight: bold; color: #000000; margin-bottom: 4px; font-size: 9.5pt; line-height: 1.25; }
+        .options { display: flex; flex-direction: column; gap: 3px; font-size: 9pt; color: #000000; }
+        .option-item { display: flex; align-items: center; gap: 6px; }
+        .circle-choice {
+            width: 12px; height: 12px; border: 1.5px solid #000000;
+            border-radius: 50%; display: inline-block; flex-shrink: 0; background-color: #fff;
+        }
+        .bubble-card { background: #ffffff; border: 2px solid #ea580c; border-radius: 6px; padding: 6px 10px; margin-top: 4px; }
+        .bubble-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; text-align: center; }
+        .bubble-table th { background: #ffedd5; color: #7c2d12; border: 1.5px solid #ea580c; padding: 3px 2px; font-weight: bold; }
+        .bubble-table td { border: 1px solid #fdba74; padding: 3px 2px; font-weight: bold; }
+        .bubble { width: 13px; height: 13px; border: 1.5px solid #000000; border-radius: 50%; display: inline-block; background-color: #fff; }
+        .footer-bar { text-align: center; font-size: 8.5pt; color: #7c2d12; padding: 4px 0 0 0; border-top: 1px solid #e5e7eb; margin-top: 4px; }
+        
+        .teacher-dashboard-panel {
+            background: #f8fafc; border: 2px dashed #ea580c; border-radius: 12px; padding: 15px; margin: 15px auto; max-width: 210mm;
+        }
+        .print-btn-container { position: fixed; bottom: 20px; left: 20px; z-index: 1000; }
+        .print-btn {
+            background-color: #ea580c; color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; font-size: 14pt; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            font-family: 'Cairo', sans-serif; font-weight: bold;
+        }
+        .print-btn:hover { background-color: #c2410c; }
+
+        @media print {
+            body { background-color: #fff !important; }
+            .page { box-shadow: none; margin: 0; width: 100%; height: 281mm; }
+            .print-btn-container, .teacher-dashboard-panel { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-btn-container">
+        <button class="print-btn" onclick="window.print()">🖨️ طباعة نموذج التدريب</button>
+    </div>
+
+    <!-- لوحة أدوات المعلم والتصحيح -->
+    <div class="teacher-dashboard-panel">
+        <h3 style="color: #c2410c; margin-top:0; text-align:center;">🛠️ لوحة التصحيح والربط السحابي (نموذج التدريب السادس - و)</h3>
+        <div style="margin-bottom: 10px;">
+            <label style="font-weight:bold; font-size:0.9rem;">اختر اسم الطالب:</label>
+            <input type="text" id="studentSearchInput" placeholder="اكتب اسم الطالب للبحث..." style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" oninput="filterStudents()" onclick="showDropdown()">
+            <div id="studentDropdownList" style="position:absolute; background:white; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:10; display:none;"></div>
+        </div>
+        <div style="margin-bottom: 10px; display:flex; gap:8px;">
+            <select id="cloudModelSelect" onchange="loadModelFromCloud()" style="flex:1; padding:8px; border-radius:6px;">
+                <option value="">-- استدعاء النموذج المعتمد من السحابة --</option>
+            </select>
+            <button type="button" onclick="fetchCloudModelsList()" style="padding:8px 12px; background:#ea580c; color:white; border:none; border-radius:6px; cursor:pointer;">تحديث</button>
+        </div>
+        <div style="text-align:center; margin-top:10px;">
+            <span id="liveScoreDisplay" style="font-weight:bold; color:#9a3412; font-size:1.1rem;">الدرجة الفورية: 0 من 20</span>
+            <button type="button" onclick="processAndSendToDashboard()" style="display:block; width:100%; margin-top:8px; padding:10px; background:#c2410c; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">اعتماد النتيجة وإرسالها لوحة التحكم</button>
+        </div>
+    </div>
+
+    <!-- الصفحة الأولى - نموذج التدريب (و) -->
+    <div class="page">
+        <div>
+            <div class="header-banner">
+                <h1>المملكة العربية السعودية | وزارة التعليم | ثانوية الأمير عبدالمجيد 🏫</h1>
+                <p>المادة: الكفايات اللغوية (أول ثانوي) | <strong>نموذج التدريب المتقدم (نموذج و)</strong></p>
+            </div>
+            <table class="info-table">
+                <tr>
+                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">&nbsp;</span></td>
+                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">&nbsp;</span></td>
+                </tr>
+            </table>
+            <div class="section-title">الصفحة الأولى: الأسئلة من 1 إلى 12 (مهارات نحوية ولغوية متقدمة)</div>
+        </div>
+
+        <div class="content-area">
+            <div class="two-columns">
+                <div class="column">
+                    <div class="q-box">
+                        <div class="q-title">1. نوع المعرفة في كلمة "المدينة" ضمن جملة "زرتُ المدينةَ المنورةَ":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) علم</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) معرف بأل</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مضاف إلى معرفة</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) اسم موصول</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">2. المفعول المطلق في قوله تعالى "وَكَلَّمَ اللَّهُ مُوسَى تَكْلِيمًا":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) اللَّهُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) مُوسَى</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) تَكْلِيمًا</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) وَكَلَّمَ</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">3. الحال في جملة "جاء الطالبُ مُلْتَحِقاً بالمحاضرةِ" تعرب:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) حال منصوبة وعلامة نصبها الفتحة الظاهرة</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) نعت منصوب</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مفعول به منصوب</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) تمييز منصوب</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">4. الكلمة الممنوعة من الصرف لتعليتها صيغة منتهاء الجموع فيما يلي:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) مساجدُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) فاطمةُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) أحمدُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) أفضلُ</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">5. إعراب كلمة "ساعةً" في جملة "انتظرتُ ساعةً كاملةً":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) مفعول فيه (ظرف زمان) منصوب</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) مفعول به منصوب بالفتحة</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مفعول مطلق مبنوع</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) حال منصوب</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">6. البدل المطابق (كل من كل) في جملة "أعجبني الخليفةُ عمرُ بعدلِهِ":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) الخليفةُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) عمرُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) بعدلِهِ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) أعجبني</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="q-box">
+                        <div class="q-title">7. التمييز في جملة "اشتريتُ عشرينَ كتاباً" هو كلمة:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) اشتريتُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) عشرينَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) كتاباً</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) لا يوجد تمييز</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">8. أسلوب الاستثناء المنفي التام (المستثنى منه مذكور ومنفي الفعل):</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) ما حضر الطلابُ إلا طالباً</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) حضر الطلابُ إلا طالباً</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) ما حضر إلا طالبٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) فاز الطلابُ أجمعون</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">9. المنادى في جملة "يا حافظَ القرآنِ أبشرْ" نوعه:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) مفرداً علماً</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) مضاف منصوب</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) شبيه بالمضاف</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) نكرة مقصودة</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">10. الفعل المعتل الأجوف فيما يلي:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) وعدَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) قالَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) رمى</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) وعى</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">11. المعطوف بحرف الواو في جملة "جاء محمدٌ وساجدٌ":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) جاء</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) محمدٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) وساجدٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) ساجدٌ فقط</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">12. اسم المفعول المصاغ من الفعل الثلاثي "صَنَعَ" هو:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) صَانِعٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) مَصْنُوعٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مِصْنَعٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) يَصْنَعُ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bar">صفحة 1 من 2 - نموذج التدريب (و) - ثانوية الأمير عبدالمجيد</div>
+    </div>
+
+    <!-- الصفحة الثانية - نموذج التدريب (و) -->
+    <div class="page">
+        <div>
+            <div class="section-title p2" style="margin-top: 0;">ثانوية الأمير عبدالمجيد 🏫 | نموذج التدريب: الصفحة الثانية (13 إلى 20) وجدول التظليل</div>
+            <table class="info-table p2">
+                <tr>
+                    <td style="width: 55%;"><strong>اسم الطالب:</strong> <span class="line">&nbsp;</span></td>
+                    <td style="width: 45%;"><strong>الصف والشعبة:</strong> <span class="line">&nbsp;</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="content-area">
+            <div class="two-columns">
+                <div class="column">
+                    <div class="q-box">
+                        <div class="q-title">13. المفعول لأجله في جملة "أعطيتُ الفقيرَ ابتغاءَ مرضاةِ اللهِ":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) الفقيرَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) ابتغاءَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مرضاةِ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) اللهِ</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">14. اسم الفاعل من الفعل الثلاثي "نَصَرَ" هو:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) مَنْصُورٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) نَاصِرٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) مِنْصَرٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) يَنْصُرُ</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">15. إعراب الفعل المضارع المعتل الآخر بالفتحة المقدرة إذا كان منصوباً بـ (لن):</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) لن يسعَ (تظهر الفتحة على الألف خفةً)</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) لن يرميَ (تظهر الفتحة على الياء لخفتها)</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) لن يدعوُ (تظهر بوضوح)</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) تقاس بالحركات السكونية</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">16. الجملة التي تحتوي على اسم تفضيل مستوفي الشروط هي:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) محمدٌ أكرمُ من خالدٍ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) الزجاج أسرع انكساراً</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) ما أسرعَ السيارةَ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) أزرق اللون جميل</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="q-box">
+                        <div class="q-title">17. التوكيد اللفظي في جملة "العلمُ العلمُ أساسُ التقدمِ" يتمثل في تكرار كلمة:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) العلمُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) أساسُ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) التقدمِ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) لا يوجد توكيد لفظي</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">18. نوع الفعل من حيث التعدي واللزوم في جملة "فرحَ الناجحُ بنجاحِهِ":</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) فعل لازم (لا يكتفي بمفعول به)</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) فعل متعد لمفعولين</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) فعل متعد لمفعول واحد</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) فعل مبني للمجهول</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">19. الكلمة المبنية فيما يلي بين الكلمات المعربة هي:</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) هذا</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) كتابٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) طالبٌ</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) معلمٌ</div>
+                        </div>
+                    </div>
+                    <div class="q-box">
+                        <div class="q-title">20. علامة إعراب الأسماء الخمسة في حالة الجصب (مثل: رأيتُ أخاكَ):</div>
+                        <div class="options">
+                            <div class="option-item"><span class="circle-choice"></span>أ) الواو</div>
+                            <div class="option-item"><span class="circle-choice"></span>ب) الألف</div>
+                            <div class="option-item"><span class="circle-choice"></span>ج) الياء</div>
+                            <div class="option-item"><span class="circle-choice"></span>د) الكسرة الظاهرة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- جدول التظليل -->
+            <div class="bubble-card">
+                <div style="text-align: center; color: #7c2d12; font-weight: bold; font-size: 10pt; margin-bottom: 2px;">
+                    جدول تظليل إجابات التدريب (نموذج و) - أ / عبدالعزيز الفيفي
+                </div>
+                <table class="bubble-table">
+                    <tr>
+                        <th>السؤال</th><th>أ</th><th>ب</th><th>ج</th><th>د</th>
+                        <th>السؤال</th><th>أ</th><th>ب</th><th>ج</th><th>د</th>
+                    </tr>
+                    <script>
+                        for(let i=1; i<=10; i++) {
+                            document.write(`<tr>
+                                <td>${i}</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                                <td>${i+10}</td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td><td><span class="bubble"></span></td>
+                            </tr>`);
+                        }
+                    </script>
+                </table>
+            </div>
+        </div>
+        <div class="footer-bar">صفحة 2 من 2 - نموذج التدريب (و) - ثانوية الأمير عبدالمجيد - إعداد: أ/ عبدالعزيز الفيفي 🎓</div>
+    </div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBkCO7FDQXd89YDf843J4_AtvEFvzzt-R0",
+        authDomain: "aztlg-494c3.firebaseapp.com",
+        projectId: "aztlg-494c3",
+        storageBucket: "aztlg-494c3.firebasestorage.app",
+        messagingSenderId: "597051893949",
+        appId: "1:597051893949:web:de5554ac900317a92b2fd4"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.firestore();
+
+    let allStudents = [];
+    let activeModelKeys = {
+        1: 'ب', 2: 'ج', 3: 'أ', 4: 'أ', 5: 'أ', 6: 'ب', 7: 'ج', 8: 'أ', 9: 'ب', 10: 'ب',
+        11: 'ج', 12: 'ب', 13: 'ب', 14: 'ب', 15: 'ب', 16: 'أ', 17: 'أ', 18: 'أ', 19: 'أ', 20: 'ب'
+    };
+
+    window.onload = function() {
+        loadAllowedStudents();
+        fetchCloudModelsList();
+    };
+
+    function fetchCloudModelsList() {
+        const select = document.getElementById('cloudModelSelect');
+        if(!select) return;
+        db.collection("approved_models").get().then((snapshot) => {
+            select.innerHTML = '<option value="">-- استدعاء النموذج المعتمد من السحابة --</option>';
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                if(data.model_name) {
+                    let opt = document.createElement('option');
+                    opt.value = data.model_name;
+                    opt.textContent = data.model_name;
+                    select.appendChild(opt);
+                }
+            });
+        });
+    }
+
+    async function loadModelFromCloud() {
+        const modelName = document.getElementById('cloudModelSelect').value;
+        if(!modelName) return;
+        try {
+            const docRef = await db.collection("approved_models").doc(modelName).get();
+            if(docRef.exists) {
+                const data = docRef.data();
+                if(data.keys) { activeModelKeys = data.keys; }
+                alert(`✅ تم تحميل مفاتيح (${modelName}) بنجاح!`);
+            }
+        } catch (error) {
+            alert("حدث خطأ أثناء تحميل النموذج.");
+        }
+    }
+
+    function loadAllowedStudents() {
+        db.collection("allowed_students").orderBy("name").get().then((snapshot) => {
+            allStudents = [];
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                if(data.name) allStudents.push(data.name);
+            });
+            renderStudentDropdown(allStudents);
+        });
+    }
+
+    function renderStudentDropdown(studentsArray) {
+        const listDiv = document.getElementById('studentDropdownList');
+        if(!listDiv) return;
+        listDiv.innerHTML = '';
+        if (studentsArray.length === 0) {
+            listDiv.innerHTML = '<div style="padding:8px; color:#999;">لا توجد نتائج</div>';
+            return;
+        }
+        studentsArray.forEach(name => {
+            const item = document.createElement('div');
+            item.style.padding = '8px';
+            item.style.cursor = 'pointer';
+            item.style.borderBottom = '1px solid #f1f5f9';
+            item.innerText = name;
+            item.onclick = function() {
+                document.getElementById('studentSearchInput').value = name;
+                listDiv.style.display = 'none';
+            };
+            listDiv.appendChild(item);
+        });
+    }
+
+    function showDropdown() {
+        const listDiv = document.getElementById('studentDropdownList');
+        if(listDiv) listDiv.style.display = 'block';
+    }
+
+    function filterStudents() {
+        const query = document.getElementById('studentSearchInput').value.trim().toLowerCase();
+        const filtered = allStudents.filter(name => name.toLowerCase().includes(query));
+        renderStudentDropdown(filtered);
+        showDropdown();
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.teacher-dashboard-panel')) {
+            const listDiv = document.getElementById('studentDropdownList');
+            if(listDiv) listDiv.style.display = 'none';
+        }
+    });
+
+    async function processAndSendToDashboard() {
+        const studentName = document.getElementById('studentSearchInput').value.trim();
+        if (!studentName) {
+            alert('الرجاء اختيار اسم الطالب أولاً.');
+            return;
+        }
+        let score = 20;
+        let recordData = {
+            name: studentName,
+            score: score,
+            total: 20,
+            model_id: "نموذج تدريب (و)",
+            time: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        try {
+            await db.collection("alkfaeat_results").add(recordData);
+            alert(`✅ تم اعتماد وإرسال نتيجة التدريب للطالب (${studentName}) لوحة التحكم بنجاح!`);
+            document.getElementById('studentSearchInput').value = '';
+        } catch (error) {
+            alert("حدث خطأ أثناء إرسال النتيجة.");
+        }
+    }
+</script>
+</body>
+</html>
